@@ -1,10 +1,15 @@
 {
   "name": "hiring-devops-fizzbuzz",
-  "version": "1.0.0",
-  "description": "Observe that the `main.go` file contains:",
-  "main": "main.js",
+  "version": "1.0.4",
+  "description": "Observe that the `index.js` file contains several endpoints for testing",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "nodemon": "nodemon --require './tracing_local_console.js' ./index.js",
+    "test": "jest --forceExit --no-cache --coverage",
+    "local": "node --require './tracing_local_console.js' index.js",
+    "docker": "node --require './tracing_otlp_remote.js' index.js",
+    "uppatchversion": "npm version --no-commit-hooks --no-git-tag-version patch",
+    "upminorversion": "npm version --no-commit-hooks --no-git-tag-version minor"
   },
   "repository": {
     "type": "git",
@@ -16,10 +21,23 @@
   "bugs": {
     "url": "https://github.com/watchtowr/hiring-devops-fizzbuzz/issues"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "homepage": "https://github.com/watchtowr/hiring-devops-fizzbuzz#readme",
   "dependencies": {
+    "@opentelemetry/api": "^1.2.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.32.1",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.33.0",
+    "@opentelemetry/sdk-node": "^0.33.0",
     "body-parser": "^1.20.0",
     "express": "^4.18.1",
+    "redis": "^4.3.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.3",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.2.4"
   }
 }
