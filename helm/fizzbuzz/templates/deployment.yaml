@@ -1,0 +1,206 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fizzbuzz1.fullname" . }}
+  labels:
+    {{- include "fizzbuzz1.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "fizzbuzz.selectorLabels" . | nindent 6 }}
+      {{- include "fizzbuzz1.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fizzbuzz.selectorLabels" . | nindent 8 }}
+        {{- include "fizzbuzz1.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fizzbuzz.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "fizzbuzz1.name" . }}
+          env:
+            - name: HEALTHCHECK_TARGET_URL
+              value: "http://{{ include "fizzbuzz2.fullname" . }}:{{ add .Values.service.basePort 2 }}"
+            - name: HEALTHCHECK_TARGET_INTERVAL
+              value: "{{ .Values.appEnv.HEALTHCHECK_TARGET_INTERVAL }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.basePort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.basePort }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.basePort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fizzbuzz2.fullname" . }}
+  labels:
+    {{- include "fizzbuzz2.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "fizzbuzz.selectorLabels" . | nindent 6 }}
+      {{- include "fizzbuzz2.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fizzbuzz.selectorLabels" . | nindent 8 }}
+        {{- include "fizzbuzz2.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fizzbuzz.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "fizzbuzz2.name" . }}
+          env:
+            - name: HEALTHCHECK_TARGET_URL
+              value: "http://{{ include "fizzbuzz3.fullname" . }}:{{ add .Values.service.basePort 3 }}"
+            - name: HEALTHCHECK_TARGET_INTERVAL
+              value: "{{ .Values.appEnv.HEALTHCHECK_TARGET_INTERVAL }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.basePort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.basePort }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.basePort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fizzbuzz3.fullname" . }}
+  labels:
+    {{- include "fizzbuzz3.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "fizzbuzz.selectorLabels" . | nindent 6 }}
+      {{- include "fizzbuzz3.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fizzbuzz.selectorLabels" . | nindent 8 }}
+        {{- include "fizzbuzz3.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fizzbuzz.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "fizzbuzz3.name" . }}
+          env:
+            - name: HEALTHCHECK_TARGET_URL
+              value: "http://{{ include "fizzbuzz1.fullname" . }}:{{ add .Values.service.basePort 1 }}"
+            - name: HEALTHCHECK_TARGET_INTERVAL
+              value: "{{ .Values.appEnv.HEALTHCHECK_TARGET_INTERVAL }}"
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.basePort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.basePort }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.basePort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

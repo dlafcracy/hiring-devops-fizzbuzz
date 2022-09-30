@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "fizzbuzz.fullname" . }}-test-connection"
+  labels:
+    {{- include "fizzbuzz.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget1
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "fizzbuzz1.fullname" . }}:{{ add .Values.service.basePort 1 }}']
+    - name: wget2
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "fizzbuzz2.fullname" . }}:{{ add .Values.service.basePort 2 }}']
+    - name: wget3
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "fizzbuzz3.fullname" . }}:{{ add .Values.service.basePort 3 }}']
+  restartPolicy: Never
