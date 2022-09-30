@@ -1,0 +1,17 @@
+kind create cluster
+
+kind load docker-image hiring-devops-fizzbuzz:1.0.1
+
+helm lint ./fizzbuzz
+
+helm template --debug ./fizzbuzz
+
+helm install --dry-run --debug localfizzbuzz fizzbuzz
+
+helm install localfizzbuzz fizzbuzz/
+
+helm upgrade localfizzbuzz fizzbuzz/
+
+helm uninstall localfizzbuzz
+
+helm version
