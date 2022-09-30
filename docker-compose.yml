@@ -1,0 +1,71 @@
+networks:
+  fizzbuzz:
+    driver: bridge
+    name: fizzbuzz
+services:
+  fizzbuzz1:
+    container_name: fizzbuzz1
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    environment:
+      HEALTHCHECK_TARGET_URL: http://fizzbuzz2:3000
+      HEALTHCHECK_TARGET_INTERVAL: 3000
+    hostname: fizzbuzz1
+    image: hiring-devops-fizzbuzz:1.0.4
+    logging:
+      driver: json-file
+      options:
+        max-file: "1"
+        max-size: 5m
+    networks:
+      fizzbuzz: null
+    ports:
+      - published: 3001
+        target: 3000
+    restart: unless-stopped
+  fizzbuzz2:
+    container_name: fizzbuzz2
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    environment:
+      HEALTHCHECK_TARGET_URL: http://fizzbuzz3:3000
+      HEALTHCHECK_TARGET_INTERVAL: 3000
+    hostname: fizzbuzz2
+    image: hiring-devops-fizzbuzz:1.0.4
+    logging:
+      driver: json-file
+      options:
+        max-file: "1"
+        max-size: 5m
+    networks:
+      fizzbuzz: null
+    ports:
+      - published: 3002
+        target: 3000
+    restart: unless-stopped
+  fizzbuzz3:
+    container_name: fizzbuzz3
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    environment:
+      HEALTHCHECK_TARGET_URL: http://fizzbuzz1:3000
+      HEALTHCHECK_TARGET_INTERVAL: 3000
+    hostname: fizzbuzz3
+    image: hiring-devops-fizzbuzz:1.0.4
+    logging:
+      driver: json-file
+      options:
+        max-file: "1"
+        max-size: 5m
+    networks:
+      fizzbuzz: null
+    ports:
+      - published: 3003
+        target: 3000
+    restart: unless-stopped

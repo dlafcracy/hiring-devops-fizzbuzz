@@ -1,0 +1,17 @@
+# nodejs related files that are not required to be included in container image
+coverage
+node_modules
+test.js
+
+# docker related files that are not required for apps
+docker-compose.yml
+Dockerfile
+helm
+
+# go version of hiring-devops-fizzbuzz
+go.mod
+go.sum
+main.go
+
+# repository related files that are to be excluded in container image
+README.md
